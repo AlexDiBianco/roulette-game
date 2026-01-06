@@ -285,6 +285,7 @@
             align-items: center;
             gap: 10px;
             margin-top: 10px;
+            flex-wrap: wrap;
         }
 
         .bet-amount button {
@@ -310,6 +311,43 @@
             font-size: 24px;
             font-weight: bold;
             min-width: 100px;
+        }
+
+        .bet-input-container {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .bet-input {
+            width: 100px;
+            padding: 8px;
+            font-size: 16px;
+            border: 2px solid #f4d03f;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.9);
+            color: #000;
+            text-align: center;
+        }
+
+        .bet-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .increment-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .increment-buttons button {
+            padding: 8px 15px;
+            font-size: 16px;
         }
 
         #spinBtn {
@@ -641,9 +679,26 @@
                 <div class="bet-controls">
                     <div>Select your bet on the table below, then choose amount:</div>
                     <div class="bet-amount">
-                        <button onclick="decreaseBet()">-$10</button>
-                        <span id="betAmount">$10</span>
-                        <button onclick="increaseBet()">+$10</button>
+                        <div class="bet-row">
+                            <span id="betAmount">$10</span>
+                        </div>
+                        <div class="bet-row increment-buttons">
+                            <button onclick="changeBet(-10)">-$10</button>
+                            <button onclick="changeBet(-50)">-$50</button>
+                            <button onclick="changeBet(-100)">-$100</button>
+                            <button onclick="changeBet(-500)">-$500</button>
+                        </div>
+                        <div class="bet-row increment-buttons">
+                            <button onclick="changeBet(10)">+$10</button>
+                            <button onclick="changeBet(50)">+$50</button>
+                            <button onclick="changeBet(100)">+$100</button>
+                            <button onclick="changeBet(500)">+$500</button>
+                        </div>
+                        <div class="bet-row bet-input-container">
+                            <label for="customBet" style="font-size: 14px;">Custom:</label>
+                            <input type="number" id="customBet" class="bet-input" min="10" step="10" placeholder="Enter amount">
+                            <button onclick="setCustomBet()">Set</button>
+                        </div>
                     </div>
                     <div class="selected-bets">
                         <div class="selected-bets-title">Selected Bets:</div>
@@ -795,18 +850,35 @@
             }
         }
 
-        function increaseBet() {
-            if (betAmount + 10 <= balance) {
-                betAmount += 10;
+        function changeBet(amount) {
+            const newBet = betAmount + amount;
+            if (newBet >= 10 && newBet <= balance) {
+                betAmount = newBet;
                 updateDisplay();
+            } else if (newBet < 10) {
+                showNotification('Minimum bet is $10');
+            } else if (newBet > balance) {
+                showNotification('Insufficient balance');
             }
         }
 
-        function decreaseBet() {
-            if (betAmount > 10) {
-                betAmount -= 10;
-                updateDisplay();
+        function setCustomBet() {
+            const input = document.getElementById('customBet');
+            const value = parseInt(input.value);
+            
+            if (isNaN(value) || value < 10) {
+                showNotification('Minimum bet is $10');
+                return;
             }
+            
+            if (value > balance) {
+                showNotification('Insufficient balance');
+                return;
+            }
+            
+            betAmount = value;
+            input.value = '';
+            updateDisplay();
         }
 
         function updateDisplay() {
