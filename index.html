@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>American Roulette</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .left-panel {
+            width: 300px;
+            flex-shrink: 0;
+        }
+
+        .main-content {
+            flex-grow: 1;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .info-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .upgrades-panel {
+            background: rgba(0,0,0,0.4);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .upgrades-panel h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid #f4d03f;
+            padding-bottom: 10px;
+        }
+
+        .upgrade-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 2px solid #f4d03f;
+        }
+
+        .upgrade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .upgrade-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .upgrade-cost {
+            color: #f4d03f;
+            font-weight: bold;
+        }
+
+        .upgrade-desc {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .upgrade-status {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+
+        .upgrade-btn {
+            width: 100%;
+            padding: 8px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .upgrade-btn:hover:not(:disabled) {
+            background: #45a049;
+        }
+
+        .upgrade-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .upgrade-btn.owned {
+            background: #666;
+        }
+
+        .active-effects {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .active-effects h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .effect-item {
+            background: rgba(76, 175, 80, 0.3);
+            padding: 8px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .wheel-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .wheel-container {
+            display: inline-block;
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                #c41e3a 0deg 9deg,
+                #000 9deg 18deg,
+                #c41e3a 18deg 27deg,
+                #000 27deg 36deg,
+                #c41e3a 36deg 45deg,
+                #000 45deg 54deg,
+                #c41e3a 54deg 63deg,
+                #000 63deg 72deg,
+                #c41e3a 72deg 81deg,
+                #000 81deg 90deg,
+                #c41e3a 90deg 99deg,
+                #000 99deg 108deg,
+                #c41e3a 108deg 117deg,
+                #000 117deg 126deg,
+                #c41e3a 126deg 135deg,
+                #000 135deg 144deg,
+                #c41e3a 144deg 153deg,
+                #000 153deg 162deg,
+                #c41e3a 162deg 171deg,
+                #000 171deg 180deg,
+                #c41e3a 180deg 189deg,
+                #000 189deg 198deg,
+                #c41e3a 198deg 207deg,
+                #000 207deg 216deg,
+                #c41e3a 216deg 225deg,
+                #000 225deg 234deg,
+                #c41e3a 234deg 243deg,
+                #000 243deg 252deg,
+                #c41e3a 252deg 261deg,
+                #000 261deg 270deg,
+                #c41e3a 270deg 279deg,
+                #000 279deg 288deg,
+                #c41e3a 288deg 297deg,
+                #000 297deg 306deg,
+                #c41e3a 306deg 315deg,
+                #000 315deg 324deg,
+                #c41e3a 324deg 333deg,
+                #000 333deg 342deg,
+                #c41e3a 342deg 351deg,
+                #000 351deg 360deg
+            );
+            border: 15px solid #8b6914;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        .wheel.spinning {
+            animation: spin 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(1800deg); }
+        }
+
+        .ball {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
+            opacity: 0;
+        }
+
+        .ball.active {
+            opacity: 1;
+            animation: ballDrop 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        @keyframes ballDrop {
+            0% { top: 10px; }
+            50% { top: 10px; }
+            100% { top: 140px; }
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            min-height: 30px;
+        }
+
+        .prediction {
+            margin-top: 10px;
+            font-size: 20px;
+            color: #f4d03f;
+            font-weight: bold;
+        }
+
+        .bet-controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .bet-amount {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .bet-amount button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .bet-amount button:hover {
+            background: #45a049;
+        }
+
+        .bet-amount button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .bet-amount span {
+            font-size: 24px;
+            font-weight: bold;
+            min-width: 100px;
+        }
+
+        #spinBtn {
+            padding: 15px 40px;
+            font-size: 20px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        #spinBtn:hover:not(:disabled) {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        #spinBtn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .table-container {
+            background: #1a5f1a;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .betting-table {
+            display: grid;
+            gap: 2px;
+            margin: 0 auto;
+        }
+
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(13, 50px);
+            grid-template-rows: repeat(3, 50px);
+            gap: 2px;
+            margin-bottom: 10px;
+        }
+
+        .bet-cell {
+            background: #2ecc71;
+            border: 2px solid #f4d03f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            color: white;
+        }
+
+        .bet-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(244, 208, 63, 0.5);
+        }
+
+        .bet-cell.selected {
+            background: #f39c12;
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.8);
+        }
+
+        .bet-cell.red {
+            background: #c41e3a;
+        }
+
+        .bet-cell.black {
+            background: #000;
+        }
+
+        .bet-cell.green {
+            background: #27ae60;
+        }
+
+        .bet-cell.lucky {
+            border: 3px solid gold;
+            box-shadow: 0 0 15px gold;
+        }
+
+        .outside-bets {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .outside-bet {
+            background: #2ecc71;
+            border: 2px solid #f4d03f;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .outside-bet:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(244, 208, 63, 0.5);
+        }
+
+        .outside-bet.selected {
+            background: #f39c12;
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.8);
+        }
+
+        .outside-bet.red-bet {
+            background: #c41e3a;
+        }
+
+        .outside-bet.black-bet {
+            background: #000;
+        }
+
+        .column-bet {
+            grid-column: span 2;
+        }
+
+        .game-over {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255,255,255,0.3);
+            display: none;
+            z-index: 1000;
+        }
+
+        .game-over.show {
+            display: block;
+        }
+
+        .game-over h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .game-over button {
+            padding: 15px 40px;
+            font-size: 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(76, 175, 80, 0.95);
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .selected-bets {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            min-height: 40px;
+        }
+
+        .selected-bets-title {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .bet-tag {
+            display: inline-block;
+            background: #f39c12;
+            padding: 5px 10px;
+            margin: 3px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="upgrades-panel">
+                <h2>🛒 Upgrades</h2>
+                
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Black → Red</span>
+                        <span class="upgrade-cost">$200</span>
+                    </div>
+                    <div class="upgrade-desc">Convert 7 random black numbers to red</div>
+                    <button class="upgrade-btn" onclick="buyUpgrade('blackToRed')">Purchase</button>
+                </div>
+
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Red → Black</span>
+                        <span class="upgrade-cost">$200</span>
+                    </div>
+                    <div class="upgrade-desc">Convert 7 random red numbers to black</div>
+                    <button class="upgrade-btn" onclick="buyUpgrade('redToBlack')">Purchase</button>
+                </div>
+
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">x2 Multiplier</span>
+                        <span class="upgrade-cost">$500</span>
+                    </div>
+                    <div class="upgrade-desc">Permanently double all future winnings</div>
+                    <div class="upgrade-status" id="multiplierStatus">Owned: 0/3</div>
+                    <button class="upgrade-btn" id="multiplierBtn" onclick="buyUpgrade('multiplier')">Purchase</button>
+                </div>
+
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Next Spin Bonus</span>
+                        <span class="upgrade-cost">$50</span>
+                    </div>
+                    <div class="upgrade-desc">Add +$100 bonus to your next win</div>
+                    <button class="upgrade-btn" onclick="buyUpgrade('nextSpinBonus')">Purchase</button>
+                </div>
+
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Multiple Bets</span>
+                        <span class="upgrade-cost">$1050</span>
+                    </div>
+                    <div class="upgrade-desc">Select multiple bets per spin (one bet amount total)</div>
+                    <div class="upgrade-status" id="multiBetStatus">Not Owned</div>
+                    <button class="upgrade-btn" id="multiBetBtn" onclick="buyUpgrade('multiBet')">Purchase</button>
+                </div>
+
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Lucky Number</span>
+                        <span class="upgrade-cost">$300</span>
+                    </div>
+                    <div class="upgrade-desc">Pick one number that pays double when it hits</div>
+                    <div class="upgrade-status" id="luckyStatus">Not Set</div>
+                    <button class="upgrade-btn" id="luckyBtn" onclick="buyUpgrade('lucky')">Purchase</button>
+                </div>
+
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Insurance</span>
+                        <span class="upgrade-cost">$400</span>
+                    </div>
+                    <div class="upgrade-desc">Get half your bet back on losses</div>
+                    <div class="upgrade-status" id="insuranceStatus">Not Owned</div>
+                    <button class="upgrade-btn" id="insuranceBtn" onclick="buyUpgrade('insurance')">Purchase</button>
+                </div>
+
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Reveal Next Result</span>
+                        <span class="upgrade-cost">$2000</span>
+                    </div>
+                    <div class="upgrade-desc">See the next spin result before betting</div>
+                    <div class="upgrade-status" id="revealStatus">Uses: 0/3</div>
+                    <button class="upgrade-btn" id="revealBtn" onclick="buyUpgrade('reveal')">Purchase</button>
+                </div>
+            </div>
+
+            <div class="active-effects">
+                <h3>Active Effects</h3>
+                <div id="activeEffectsList"></div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h1>🎰 American Roulette 🎰</h1>
+            
+            <div class="game-info">
+                <div class="info-item">
+                    <div class="info-label">Balance</div>
+                    <div class="info-value" id="balance">$1000</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Current Bet</div>
+                    <div class="info-value" id="currentBet">$0</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Total Winnings</div>
+                    <div class="info-value" id="totalWinnings">$0</div>
+                </div>
+            </div>
+
+            <div class="wheel-section">
+                <div class="wheel-container">
+                    <div class="wheel" id="wheel"></div>
+                    <div class="ball" id="ball"></div>
+                </div>
+                <div class="result" id="result"></div>
+                <div class="prediction" id="prediction"></div>
+                
+                <div class="bet-controls">
+                    <div>Select your bet on the table below, then choose amount:</div>
+                    <div class="bet-amount">
+                        <button onclick="decreaseBet()">-$10</button>
+                        <span id="betAmount">$10</span>
+                        <button onclick="increaseBet()">+$10</button>
+                    </div>
+                    <div class="selected-bets">
+                        <div class="selected-bets-title">Selected Bets:</div>
+                        <div id="selectedBetsList"></div>
+                    </div>
+                    <button id="spinBtn" onclick="spin()" disabled>Place Bet & Spin</button>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <div class="table-container">
+                    <div class="numbers-grid" id="numbersGrid"></div>
+                    <div class="outside-bets">
+                        <div class="outside-bet column-bet" onclick="selectBet('1to18', 1, '1-18', this)">1-18</div>
+                        <div class="outside-bet column-bet" onclick="selectBet('even', 1, 'EVEN', this)">EVEN</div>
+                        <div class="outside-bet column-bet red-bet" onclick="selectBet('red', 1, 'RED', this)">RED</div>
+                        <div class="outside-bet column-bet black-bet" onclick="selectBet('black', 1, 'BLACK', this)">BLACK</div>
+                        <div class="outside-bet column-bet" onclick="selectBet('odd', 1, 'ODD', this)">ODD</div>
+                        <div class="outside-bet column-bet" onclick="selectBet('19to36', 1, '19-36', this)">19-36</div>
+                        <div class="outside-bet column-bet" onclick="selectBet('1st12', 2, '1st 12', this)">1st 12</div>
+                        <div class="outside-bet column-bet" onclick="selectBet('2nd12', 2, '2nd 12', this)">2nd 12</div>
+                        <div class="outside-bet column-bet" onclick="selectBet('3rd12', 2, '3rd 12', this)">3rd 12</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        let redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+        let blackNumbers = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
+        
+        let balance = 1000;
+        let betAmount = 10;
+        let currentBets = [];
+        let totalWinnings = 0;
+        let spinning = false;
+
+        let upgrades = {
+            multiplier: 0,
+            multiBet: false,
+            lucky: null,
+            insurance: false,
+            reveal: 0,
+            nextSpinBonus: 0
+        };
+
+        let nextResult = null;
+
+        const numberOrder = [0, 28, 9, 26, 30, 11, 7, 20, 32, 17, 5, 22, 34, 15, 3, 24, 36, 13, 1, 
+                           '00', 27, 10, 25, 29, 12, 8, 19, 31, 18, 6, 21, 33, 16, 4, 23, 35, 14, 2];
+
+        function initTable() {
+            const grid = document.getElementById('numbersGrid');
+            
+            const zero = document.createElement('div');
+            zero.className = 'bet-cell green';
+            zero.textContent = '0';
+            zero.style.gridRow = 'span 3';
+            zero.onclick = function(e) {
+                e.stopPropagation();
+                selectBet(0, 35, '0', e.currentTarget);
+            };
+            grid.appendChild(zero);
+
+            for (let i = 1; i <= 36; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'bet-cell';
+                cell.id = 'num-' + i;
+                cell.textContent = i;
+                
+                const row = ((i - 1) % 3) + 1;
+                const col = Math.floor((i - 1) / 3) + 2;
+                cell.style.gridRow = row;
+                cell.style.gridColumn = col;
+                
+                const num = i;
+                cell.onclick = function(e) {
+                    e.stopPropagation();
+                    selectBet(num, 35, num.toString(), e.currentTarget);
+                };
+                
+                grid.appendChild(cell);
+                updateNumberColor(i);
+            }
+
+            const doubleZero = document.createElement('div');
+            doubleZero.className = 'bet-cell green';
+            doubleZero.textContent = '00';
+            doubleZero.style.gridRow = 'span 3';
+            doubleZero.style.gridColumn = '13';
+            doubleZero.onclick = function(e) {
+                e.stopPropagation();
+                selectBet('00', 35, '00', e.currentTarget);
+            };
+            grid.appendChild(doubleZero);
+        }
+
+        function updateNumberColor(num) {
+            const cell = document.getElementById('num-' + num);
+            if (!cell) return;
+            
+            cell.classList.remove('red', 'black', 'lucky');
+            if (redNumbers.includes(num)) {
+                cell.classList.add('red');
+            } else if (blackNumbers.includes(num)) {
+                cell.classList.add('black');
+            }
+
+            if (upgrades.lucky === num) {
+                cell.classList.add('lucky');
+            }
+        }
+
+        function selectBet(value, payout, displayName, element) {
+            if (spinning) return;
+            
+            if (!upgrades.multiBet) {
+                document.querySelectorAll('.bet-cell, .outside-bet').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                currentBets = [];
+            }
+
+            const existingIndex = currentBets.findIndex(b => b.value === value);
+            if (existingIndex >= 0) {
+                currentBets.splice(existingIndex, 1);
+                element.classList.remove('selected');
+            } else {
+                element.classList.add('selected');
+                currentBets.push({ value, payout, displayName });
+            }
+
+            document.getElementById('spinBtn').disabled = currentBets.length === 0;
+            updateSelectedBetsList();
+            updateDisplay();
+        }
+
+        function updateSelectedBetsList() {
+            const list = document.getElementById('selectedBetsList');
+            if (currentBets.length === 0) {
+                list.innerHTML = '<span style="opacity: 0.5;">None</span>';
+            } else {
+                list.innerHTML = currentBets.map(b => 
+                    `<span class="bet-tag">${b.displayName}</span>`
+                ).join('');
+            }
+        }
+
+        function increaseBet() {
+            if (betAmount + 10 <= balance) {
+                betAmount += 10;
+                updateDisplay();
+            }
+        }
+
+        function decreaseBet() {
+            if (betAmount > 10) {
+                betAmount -= 10;
+                updateDisplay();
+            }
+        }
+
+        function updateDisplay() {
+            document.getElementById('balance').textContent = '$' + balance;
+            document.getElementById('betAmount').textContent = '$' + betAmount;
+            document.getElementById('currentBet').textContent = '$' + (currentBets.length > 0 ? betAmount : 0);
+            document.getElementById('totalWinnings').textContent = '$' + totalWinnings;
+            updateActiveEffects();
+        }
+
+        function updateActiveEffects() {
+            const list = document.getElementById('activeEffectsList');
+            const effects = [];
+
+            if (upgrades.multiplier > 0) {
+                const multiplier = Math.pow(2, upgrades.multiplier);
+                effects.push(`x${multiplier} Win Multiplier`);
+            }
+            if (upgrades.multiBet) {
+                effects.push('Multiple Bets Enabled');
+            }
+            if (upgrades.lucky !== null) {
+                effects.push(`Lucky Number: ${upgrades.lucky}`);
+            }
+            if (upgrades.insurance) {
+                effects.push('Insurance Active');
+            }
+            if (upgrades.nextSpinBonus > 0) {
+                effects.push(`Next Spin Bonus: +$${upgrades.nextSpinBonus}`);
+            }
+            if (nextResult !== null) {
+                effects.push(`Next Result Revealed!`);
+            }
+
+            if (effects.length === 0) {
+                list.innerHTML = '<div style="opacity: 0.5; text-align: center;">No active effects</div>';
+            } else {
+                list.innerHTML = effects.map(e => `<div class="effect-item">${e}</div>`).join('');
+            }
+        }
+
+        function buyUpgrade(type) {
+            if (spinning) return;
+
+            switch(type) {
+                case 'blackToRed':
+                    if (balance >= 200) {
+                        const availableBlacks = blackNumbers.filter(n => n >= 1 && n <= 36);
+                        if (availableBlacks.length < 7) {
+                            showNotification('Not enough black numbers to convert!');
+                            return;
+                        }
+                        balance -= 200;
+                        const toConvert = [];
+                        for (let i = 0; i < 7; i++) {
+                            const idx = Math.floor(Math.random() * availableBlacks.length);
+                            toConvert.push(availableBlacks[idx]);
+                            availableBlacks.splice(idx, 1);
+                        }
+                        toConvert.forEach(n => {
+                            const idx = blackNumbers.indexOf(n);
+                            if (idx > -1) blackNumbers.splice(idx, 1);
+                            redNumbers.push(n);
+                            updateNumberColor(n);
+                        });
+                        showNotification(`Converted ${toConvert.join(', ')} to RED!`);
+                        updateDisplay();
+                    }
+                    break;
+
+                case 'redToBlack':
+                    if (balance >= 200) {
+                        const availableReds = redNumbers.filter(n => n >= 1 && n <= 36);
+                        if (availableReds.length < 7) {
+                            showNotification('Not enough red numbers to convert!');
+                            return;
+                        }
+                        balance -= 200;
+                        const toConvert = [];
+                        for (let i = 0; i < 7; i++) {
+                            const idx = Math.floor(Math.random() * availableReds.length);
+                            toConvert.push(availableReds[idx]);
+                            availableReds.splice(idx, 1);
+                        }
+                        toConvert.forEach(n => {
+                            const idx = redNumbers.indexOf(n);
+                            if (idx > -1) redNumbers.splice(idx, 1);
+                            blackNumbers.push(n);
+                            updateNumberColor(n);
+                        });
+                        showNotification(`Converted ${toConvert.join(', ')} to BLACK!`);
+                        updateDisplay();
+                    }
+                    break;
+
+                case 'multiplier':
+                    if (balance >= 500 && upgrades.multiplier < 3) {
+                        balance -= 500;
+                        upgrades.multiplier++;
+                        document.getElementById('multiplierStatus').textContent = `Owned: ${upgrades.multiplier}/3`;
+                        if (upgrades.multiplier >= 3) {
+                            document.getElementById('multiplierBtn').disabled = true;
+                            document.getElementById('multiplierBtn').classList.add('owned');
+                            document.getElementById('multiplierBtn').textContent = 'Maxed Out';
+                        }
+                        showNotification(`x2 Multiplier purchased! Total: x${Math.pow(2, upgrades.multiplier)}`);
+                        updateDisplay();
+                    }
+                    break;
+
+                case 'nextSpinBonus':
+                    if (balance >= 50) {
+                        balance -= 50;
+                        upgrades.nextSpinBonus += 100;
+                        showNotification('Next spin bonus +$100!');
+                        updateDisplay();
+                    }
+                    break;
+
+                case 'multiBet':
+                    if (balance >= 1050 && !upgrades.multiBet) {
+                        balance -= 1050;
+                        upgrades.multiBet = true;
+                        document.getElementById('multiBetStatus').textContent = 'Owned';
+                        document.getElementById('multiBetBtn').disabled = true;
+                        document.getElementById('multiBetBtn').classList.add('owned');
+                        document.getElementById('multiBetBtn').textContent = 'Owned';
+                        showNotification('Multiple bets enabled! Click multiple spots on the table.');
+                        updateDisplay();
+                    }
+                    break;
+
+                case 'lucky':
+                    if (balance >= 300) {
+                        const num = prompt('Enter your lucky number (0-36):');
+                        const luckyNum = parseInt(num);
+                        if (luckyNum >= 0 && luckyNum <= 36) {
+                            balance -= 300;
+                            if (upgrades.lucky !== null) {
+                                updateNumberColor(upgrades.lucky);
+                            }
+                            upgrades.lucky = luckyNum;
+                            updateNumberColor(luckyNum);
+                            document.getElementById('luckyStatus').textContent = `Lucky: ${luckyNum}`;
+                            showNotification(`Lucky number set to ${luckyNum}!`);
+                            updateDisplay();
+                        } else {
+                            showNotification('Invalid number!');
+                        }
+                    }
+                    break;
+
+                case 'insurance':
+                    if (balance >= 400 && !upgrades.insurance) {
+                        balance -= 400;
+                        upgrades.insurance = true;
+                        document.getElementById('insuranceStatus').textContent = 'Owned';
+                        document.getElementById('insuranceBtn').disabled = true;
+                        document.getElementById('insuranceBtn').classList.add('owned');
+                        document.getElementById('insuranceBtn').textContent = 'Owned';
+                        showNotification('Insurance activated! Get 50% back on losses.');
+                        updateDisplay();
+                    }
+                    break;
+
+                case 'reveal':
+                    if (balance >= 2000 && upgrades.reveal < 3) {
+                        balance -= 2000;
+                        upgrades.reveal++;
+                        nextResult = numberOrder[Math.floor(Math.random() * numberOrder.length)];
+                        document.getElementById('revealStatus').textContent = `Uses: ${upgrades.reveal}/3`;
+                        document.getElementById('prediction').textContent = `🔮 Next Result: ${nextResult}`;
+                        if (upgrades.reveal >= 3) {
+                            document.getElementById('revealBtn').disabled = true;
+                            document.getElementById('revealBtn').classList.add('owned');
+                            document.getElementById('revealBtn').textContent = 'Maxed Out';
+                        }
+                        showNotification(`Next result revealed: ${nextResult}`);
+                        updateDisplay();
+                    }
+                    break;
+            }
+        }
+
+        function showNotification(message) {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.classList.add('show');
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 3000);
+        }
+
+        function spin() {
+            if (currentBets.length === 0 || spinning || balance < betAmount) return;
+            
+            spinning = true;
+            balance -= betAmount;
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('result').textContent = '';
+            
+            const wheel = document.getElementById('wheel');
+            const ball = document.getElementById('ball');
+            
+            wheel.classList.add('spinning');
+            ball.classList.add('active');
+            
+            setTimeout(() => {
+                wheel.classList.remove('spinning');
+                ball.classList.remove('active');
+                
+                let resultNumber;
+                if (nextResult !== null) {
+                    resultNumber = nextResult;
+                    nextResult = null;
+                    document.getElementById('prediction').textContent = '';
+                } else {
+                    resultNumber = numberOrder[Math.floor(Math.random() * numberOrder.length)];
+                }
+                
+                displayResult(resultNumber);
+                
+                spinning = false;
+            }, 3000);
+            
+            updateDisplay();
+        }
+
+        function displayResult(number) {
+            const resultEl = document.getElementById('result');
+            let color = 'green';
+            if (redNumbers.includes(number)) color = 'red';
+            if (blackNumbers.includes(number)) color = 'black';
+            
+            resultEl.innerHTML = `Result: <span style="color: ${color}">${number}</span>`;
+            
+            let wonAny = false;
+            let totalWinAmount = 0;
+
+            currentBets.forEach(bet => {
+                const won = checkWin(number, bet.value);
+                if (won) {
+                    wonAny = true;
+                    let winAmount = betAmount * bet.payout;
+                    
+                    if (upgrades.lucky === number && typeof number === 'number') {
+                        winAmount *= 2;
+                    }
+                    
+                    const multiplier = Math.pow(2, upgrades.multiplier);
+                    winAmount *= multiplier;
+                    
+                    if (upgrades.nextSpinBonus > 0) {
+                        winAmount += upgrades.nextSpinBonus;
+                        upgrades.nextSpinBonus = 0;
+                    }
+                    
+                    totalWinAmount += winAmount;
+                }
+            });
+
+            if (wonAny) {
+                balance += betAmount + totalWinAmount;
+                totalWinnings += totalWinAmount;
+                resultEl.innerHTML += ` - You won ${totalWinAmount}! 🎉`;
+            } else {
+                if (upgrades.insurance) {
+                    const refund = Math.floor(betAmount / 2);
+                    balance += refund;
+                    resultEl.innerHTML += ` - Insurance refund: ${refund}`;
+                } else {
+                    resultEl.innerHTML += ' - Better luck next time!';
+                }
+            }
+            
+            updateDisplay();
+        }
+
+        function checkWin(result, bet) {
+            if (bet === result) return true;
+            
+            if (bet === 'red' && redNumbers.includes(result)) return true;
+            if (bet === 'black' && blackNumbers.includes(result)) return true;
+            if (bet === 'even' && typeof result === 'number' && result !== 0 && result % 2 === 0) return true;
+            if (bet === 'odd' && typeof result === 'number' && result % 2 === 1) return true;
+            if (bet === '1to18' && typeof result === 'number' && result >= 1 && result <= 18) return true;
+            if (bet === '19to36' && typeof result === 'number' && result >= 19 && result <= 36) return true;
+            if (bet === '1st12' && typeof result === 'number' && result >= 1 && result <= 12) return true;
+            if (bet === '2nd12' && typeof result === 'number' && result >= 13 && result <= 24) return true;
+            if (bet === '3rd12' && typeof result === 'number' && result >= 25 && result <= 36) return true;
+            
+            return false;
+        }
+
+        function resetGame() {
+            balance = 1000;
+            betAmount = 10;
+            currentBets = [];
+            totalWinnings = 0;
+            
+            redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+            blackNumbers = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
+            
+            upgrades = {
+                multiplier: 0,
+                multiBet: false,
+                lucky: null,
+                insurance: false,
+                reveal: 0,
+                nextSpinBonus: 0
+            };
+            
+            nextResult = null;
+            
+            for (let i = 1; i <= 36; i++) {
+                updateNumberColor(i);
+            }
+            
+            document.getElementById('multiplierStatus').textContent = 'Owned: 0/3';
+            document.getElementById('multiplierBtn').disabled = false;
+            document.getElementById('multiplierBtn').classList.remove('owned');
+            document.getElementById('multiplierBtn').textContent = 'Purchase';
+            
+            document.getElementById('multiBetStatus').textContent = 'Not Owned';
+            document.getElementById('multiBetBtn').disabled = false;
+            document.getElementById('multiBetBtn').classList.remove('owned');
+            document.getElementById('multiBetBtn').textContent = 'Purchase';
+            
+            document.getElementById('luckyStatus').textContent = 'Not Set';
+            
+            document.getElementById('insuranceStatus').textContent = 'Not Owned';
+            document.getElementById('insuranceBtn').disabled = false;
+            document.getElementById('insuranceBtn').classList.remove('owned');
+            document.getElementById('insuranceBtn').textContent = 'Purchase';
+            
+            document.getElementById('revealStatus').textContent = 'Uses: 0/3';
+            document.getElementById('revealBtn').disabled = false;
+            document.getElementById('revealBtn').classList.remove('owned');
+            document.getElementById('revealBtn').textContent = 'Purchase';
+            
+            document.getElementById('result').textContent = '';
+            document.getElementById('prediction').textContent = '';
+            
+            document.querySelectorAll('.bet-cell, .outside-bet').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            updateSelectedBetsList();
+            updateDisplay();
+        }
+
+        initTable();
+        updateDisplay();
+    </script>
+</body>
+</html>
