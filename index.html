@@ -184,20 +184,6 @@
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
             transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
             position: relative;
-            overflow: hidden;
-        }
-
-        .wheel-segment {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            top: 50%;
-            left: 50%;
-            transform-origin: 0% 0%;
-            clip-path: polygon(0 0, 100% 0, 0 100%);
-            display: flex;
-            align-items: flex-start;
-            justify-content: flex-start;
         }
 
         .wheel-number {
@@ -206,8 +192,12 @@
             font-weight: bold;
             font-size: 11px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-            top: 8px;
-            left: 8px;
+            transform-origin: center;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .wheel.spinning {
@@ -743,53 +733,54 @@
         const numberOrder = [0, 28, 9, 26, 30, 11, 7, 20, 32, 17, 5, 22, 34, 15, 3, 24, 36, 13, 1, 
                            '00', 27, 10, 25, 29, 12, 8, 19, 31, 18, 6, 21, 33, 16, 4, 23, 35, 14, 2];
 
+        function getNumberColor(num) {
+            if (num === 0 || num === '00') {
+                return '#27ae60';
+            } else if (redNumbers.includes(num)) {
+                return '#c41e3a';
+            } else if (blackNumbers.includes(num)) {
+                return '#000';
+            }
+            return '#000';
+        }
+
         function initWheel() {
-            const wheel = document.getElementById('wheel');
-            wheel.innerHTML = '';
-            
-            const segmentAngle = 360 / numberOrder.length;
-            
-            numberOrder.forEach((num, index) => {
-                const segment = document.createElement('div');
-                segment.className = 'wheel-segment';
-                segment.id = 'wheel-' + num;
-                
-                let color;
-                if (num === 0 || num === '00') {
-                    color = '#27ae60';
-                } else if (redNumbers.includes(num)) {
-                    color = '#c41e3a';
-                } else if (blackNumbers.includes(num)) {
-                    color = '#000';
-                }
-                
-                segment.style.background = color;
-                segment.style.transform = `rotate(${index * segmentAngle}deg)`;
-                
-                const numberSpan = document.createElement('span');
-                numberSpan.className = 'wheel-number';
-                numberSpan.textContent = num;
-                segment.appendChild(numberSpan);
-                
-                wheel.appendChild(segment);
-            });
+            updateWheel();
         }
 
         function updateWheel() {
-            numberOrder.forEach((num) => {
-                const segment = document.getElementById('wheel-' + num);
-                if (!segment) return;
+            const wheel = document.getElementById('wheel');
+            const segmentAngle = 360 / numberOrder.length;
+            
+            // Build conic-gradient
+            let gradientParts = [];
+            numberOrder.forEach((num, index) => {
+                const color = getNumberColor(num);
+                const startAngle = index * segmentAngle;
+                const endAngle = (index + 1) * segmentAngle;
+                gradientParts.push(`${color} ${startAngle}deg ${endAngle}deg`);
+            });
+            
+            wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
+            
+            // Clear and recreate number labels
+            wheel.innerHTML = '';
+            
+            numberOrder.forEach((num, index) => {
+                const numberEl = document.createElement('div');
+                numberEl.className = 'wheel-number';
+                numberEl.textContent = num;
                 
-                let color;
-                if (num === 0 || num === '00') {
-                    color = '#27ae60';
-                } else if (redNumbers.includes(num)) {
-                    color = '#c41e3a';
-                } else if (blackNumbers.includes(num)) {
-                    color = '#000';
-                }
+                // Position numbers around the wheel
+                const angle = (index * segmentAngle + segmentAngle / 2) * Math.PI / 180;
+                const radius = 105; // Distance from center
+                const x = 50 + radius * Math.cos(angle - Math.PI / 2);
+                const y = 50 + radius * Math.sin(angle - Math.PI / 2);
                 
-                segment.style.background = color;
+                numberEl.style.left = `calc(${x}% - 10px)`;
+                numberEl.style.top = `calc(${y}% - 10px)`;
+                
+                wheel.appendChild(numberEl);
             });
         }
 
