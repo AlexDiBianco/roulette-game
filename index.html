@@ -557,6 +557,13 @@
             margin: 3px;
             border-radius: 5px;
             font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bet-tag:hover {
+            background: #e67e22;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -608,7 +615,7 @@
                         <span class="upgrade-name">Multiple Bets</span>
                         <span class="upgrade-cost">$1050</span>
                     </div>
-                    <div class="upgrade-desc">Select multiple bets per spin (one bet amount total)</div>
+                    <div class="upgrade-desc">Select up to 2 bets per spin (one bet amount total)</div>
                     <div class="upgrade-status" id="multiBetStatus">Not Owned</div>
                     <button class="upgrade-btn" id="multiBetBtn" onclick="buyUpgrade('multiBet')">Purchase</button>
                 </div>
@@ -830,8 +837,13 @@
                 currentBets.splice(existingIndex, 1);
                 element.classList.remove('selected');
             } else {
+                // Check if we've reached the limit (2 bets when multiBet is enabled)
+                if (upgrades.multiBet && currentBets.length >= 2) {
+                    showNotification('Maximum 2 bets allowed!');
+                    return;
+                }
                 element.classList.add('selected');
-                currentBets.push({ value, payout, displayName });
+                currentBets.push({ value, payout, displayName, element });
             }
 
             document.getElementById('spinBtn').disabled = currentBets.length === 0;
@@ -844,10 +856,24 @@
             if (currentBets.length === 0) {
                 list.innerHTML = '<span style="opacity: 0.5;">None</span>';
             } else {
-                list.innerHTML = currentBets.map(b => 
-                    `<span class="bet-tag">${b.displayName}</span>`
+                list.innerHTML = currentBets.map((b, index) => 
+                    `<span class="bet-tag" onclick="deselectBet(${index})">${b.displayName}</span>`
                 ).join('');
             }
+        }
+
+        function deselectBet(index) {
+            if (spinning) return;
+            
+            const bet = currentBets[index];
+            if (bet && bet.element) {
+                bet.element.classList.remove('selected');
+            }
+            currentBets.splice(index, 1);
+            
+            document.getElementById('spinBtn').disabled = currentBets.length === 0;
+            updateSelectedBetsList();
+            updateDisplay();
         }
 
         function changeBet(amount) {
@@ -1006,7 +1032,7 @@
                         document.getElementById('multiBetBtn').disabled = true;
                         document.getElementById('multiBetBtn').classList.add('owned');
                         document.getElementById('multiBetBtn').textContent = 'Owned';
-                        showNotification('Multiple bets enabled! Click multiple spots on the table.');
+                        showNotification('Multiple bets enabled! You can now select up to 2 bets.');
                         updateDisplay();
                     }
                     break;
