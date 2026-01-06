@@ -20,15 +20,26 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
-            display: flex;
+            display: grid;
+            grid-template-columns: 600px 1fr 400px;
             gap: 20px;
+            align-items: start;
         }
 
         .left-panel {
-            width: 300px;
-            flex-shrink: 0;
+            width: 100%;
+        }
+
+        .center-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .right-panel {
+            width: 100%;
         }
 
         .main-content {
@@ -78,6 +89,13 @@
             text-align: center;
             border-bottom: 2px solid #f4d03f;
             padding-bottom: 10px;
+            grid-column: 1 / -1;
+        }
+
+        .upgrades-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
 
         .upgrade-item {
@@ -166,7 +184,8 @@
 
         .wheel-section {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            width: 100%;
         }
 
         .wheel-container {
@@ -250,6 +269,9 @@
         .bet-controls {
             text-align: center;
             margin-bottom: 20px;
+            background: rgba(0,0,0,0.4);
+            padding: 20px;
+            border-radius: 10px;
         }
 
         .bet-amount {
@@ -333,6 +355,9 @@
             cursor: pointer;
             margin-top: 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         #spinBtn:hover:not(:disabled) {
@@ -545,7 +570,7 @@
         <div class="left-panel">
             <div class="upgrades-panel">
                 <h2>🛒 Upgrades</h2>
-                
+                <div class="upgrades-list"></div>
                 <div class="upgrade-item">
                     <div class="upgrade-header">
                         <span class="upgrade-name">Black → Red</span>
@@ -622,6 +647,7 @@
                     <div class="upgrade-status" id="revealStatus">Uses: 0/3</div>
                     <button class="upgrade-btn" id="revealBtn" onclick="buyUpgrade('reveal')">Purchase</button>
                 </div>
+                </div>
             </div>
 
             <div class="active-effects">
@@ -630,7 +656,7 @@
             </div>
         </div>
 
-        <div class="main-content">
+        <div class="center-panel">
             <h1>🎰 American Roulette 🎰</h1>
             
             <div class="game-info">
@@ -655,9 +681,14 @@
                 </div>
                 <div class="result" id="result"></div>
                 <div class="prediction" id="prediction"></div>
-                
-                <div class="bet-controls">
-                    <div>Select your bet on the table below, then choose amount:</div>
+            </div>
+            
+            <button id="spinBtn" onclick="spin()" disabled>Place Bet & Spin</button>
+        </div>
+
+        <div class="right-panel">
+            <div class="bet-controls">
+                <div>Select your bet on the table below, then choose amount:</div>
                     <div class="bet-amount">
                         <div class="bet-row">
                             <span id="betAmount">$10</span>
@@ -684,9 +715,7 @@
                         <div class="selected-bets-title">Selected Bets:</div>
                         <div id="selectedBetsList"></div>
                     </div>
-                    <button id="spinBtn" onclick="spin()" disabled>Place Bet & Spin</button>
                 </div>
-            </div>
 
             <div style="text-align: center;">
                 <div class="table-container">
@@ -703,6 +732,7 @@
                         <div class="outside-bet column-bet" onclick="selectBet('3rd12', 2, '3rd 12', this)">3rd 12</div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
