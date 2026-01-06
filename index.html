@@ -20,10 +20,10 @@
         }
 
         .container {
-            max-width: 1800px;
+            max-width: 2000px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 550px 1fr 450px;
+            grid-template-columns: 480px minmax(500px, 1fr) 420px;
             gap: 30px;
             align-items: start;
             padding: 20px;
@@ -31,6 +31,8 @@
 
         .left-panel {
             width: 100%;
+            max-width: 480px;
+            overflow: hidden;
         }
 
         .center-panel {
@@ -41,6 +43,8 @@
 
         .right-panel {
             width: 100%;
+            max-width: 420px;
+            overflow: hidden;
         }
 
         .main-content {
@@ -105,6 +109,9 @@
             padding: 15px;
             border-radius: 5px;
             border: 2px solid #f4d03f;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .upgrade-header {
@@ -146,6 +153,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
+            margin-top: auto;
         }
 
         .upgrade-btn:hover:not(:disabled) {
@@ -374,10 +382,11 @@
 
         .table-container {
             background: #1a5f1a;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             display: inline-block;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            max-width: 100%;
         }
 
         .betting-table {
@@ -388,8 +397,8 @@
 
         .numbers-grid {
             display: grid;
-            grid-template-columns: repeat(13, 50px);
-            grid-template-rows: repeat(3, 50px);
+            grid-template-columns: repeat(13, 30px);
+            grid-template-rows: repeat(3, 30px);
             gap: 2px;
             margin-bottom: 10px;
         }
@@ -402,6 +411,7 @@
             justify-content: center;
             cursor: pointer;
             font-weight: bold;
+            font-size: 11px;
             transition: all 0.2s;
             color: white;
         }
@@ -443,10 +453,11 @@
         .outside-bet {
             background: #2ecc71;
             border: 2px solid #f4d03f;
-            padding: 15px;
+            padding: 10px 5px;
             text-align: center;
             cursor: pointer;
             font-weight: bold;
+            font-size: 11px;
             transition: all 0.2s;
         }
 
